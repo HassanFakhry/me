@@ -383,5 +383,100 @@
     c.el.querySelectorAll('.carousel-dot').forEach(function(d, i) { d.classList.toggle('active', i === index); });
   }
 </script>
+
+<div id="site-timer-container" class="site-timer">
+    <span id="site-timer-text">Time invested: 0s</span>
+    <span class="timer-tooltip">Don't worry, I won't tell the system.</span>
+</div>
+
+<style>
+    .site-timer {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(20, 20, 20, 0.85); /* Sleek dark glass look */
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        color: #e0e0e0;
+        font-family: 'Courier New', Courier, monospace; /* Developer aesthetic */
+        font-size: 13px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 9999;
+        cursor: crosshair; /* Subtle touch */
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    /* Tooltip Styling */
+    .site-timer .timer-tooltip {
+        visibility: hidden;
+        background-color: #111;
+        color: #888;
+        text-align: center;
+        border-radius: 6px;
+        border: 1px solid #333;
+        padding: 6px 10px;
+        position: absolute;
+        z-index: 1;
+        bottom: 130%; 
+        right: 0;
+        opacity: 0;
+        transition: opacity 0.3s, transform 0.3s;
+        transform: translateY(5px);
+        white-space: nowrap;
+        font-size: 11px;
+        font-family: sans-serif;
+    }
+
+    .site-timer:hover .timer-tooltip {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ========================================== */
+    /* THIS IS WHERE THE MOBILE QUERY GOES        */
+    /* ========================================== */
+    @media (max-width: 768px) {
+        .site-timer {
+            display: none !important;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let seconds = 0;
+        const timerContainer = document.getElementById('site-timer-container');
+        const timerText = document.getElementById('site-timer-text');
+
+        function formatTime(totalSeconds) {
+            const m = Math.floor(totalSeconds / 60);
+            const s = totalSeconds % 60;
+            if (m === 0) return `${s}s`;
+            return `${m}m ${s}s`;
+        }
+
+        setInterval(() => {
+            seconds++;
+            const formatted = formatTime(seconds);
+
+            if (seconds < 60) {
+                // 0 to 59 seconds
+                timerText.textContent = `Time invested: ${formatted}`;
+            } else if (seconds >= 60 && seconds < 300) {
+                // 1 to 4:59 minutes
+                timerText.textContent = `Still here? After ${formatted}? Greatness is waiting.`;
+            } else {
+                // 5+ minutes
+                timerText.textContent = `You've been here for ${formatted}. Your future self is waiting on you to build something.`;
+                timerContainer.style.color = '#ff6b6b'; 
+            }
+        }, 1000);
+    });
+</script>
+
 </body>
 </html>
